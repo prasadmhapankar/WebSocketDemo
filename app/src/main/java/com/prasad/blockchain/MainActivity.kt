@@ -6,6 +6,7 @@ import com.prasad.blockchain.ServerConnection.ConnectionStatus
 import kotlinx.android.synthetic.main.activity_main.*
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import org.json.JSONObject
 
 
 class MainActivity : AppCompatActivity(), ServerConnection.ServerListener {
@@ -25,12 +26,8 @@ class MainActivity : AppCompatActivity(), ServerConnection.ServerListener {
     override fun onResume() {
         super.onResume()
         mServerConnection.connect(this)
-        mServerConnection.sendMessage("{\"op\": \"ping\"}")
         mServerConnection.sendMessage("{\"op\": \"ping_block\"}")
-    }
-
-    override fun onStart() {
-        super.onStart()
+        mServerConnection.sendMessage("{\"op\": \"ping_tx\"}")
     }
 
     override fun onPause() {
@@ -38,17 +35,25 @@ class MainActivity : AppCompatActivity(), ServerConnection.ServerListener {
         mServerConnection.disconnect()
     }
 
-    private fun onStartConnect() {
+    /*private fun onStartConnect() {
         val request =
             Request.Builder().url("wss://ws.blockchain.info/inv").build()
         val listener = EchoWebSocketListenerTest()
         val ws = client.newWebSocket(request, listener)
         println("listner ws : $ws")
         client.dispatcher().executorService().shutdown()
-    }
+    }*/
 
     override fun onNewMessage(message: String?) {
         println("message : $message")
+        var obj = JSONObject(message)
+        if(obj.has("op") && obj.optString("op") == "block"){
+            println("message op: ${obj.optString("op")}")
+            tvBlockHash.text = "Block Hash : " + obj.optString("hash")
+            tvBlockHeight.text = "Block Height :  " + obj.optInt("height")
+            tvTotalBtcSent.text = "Total BTC Sent : " + obj.optInt("totalBTCSent")
+            tvReward.text = "Reward : " + obj.optInt("reward")
+        }
     }
 
     override fun onStatusChange(status: ConnectionStatus?) {
