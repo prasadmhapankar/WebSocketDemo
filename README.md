@@ -1,5 +1,8 @@
 # WebSocketDemo
 
+# Libraries used  
+- OkHttp
+
 I) Use the Websocket APIs documented here - https://www.blockchain.com/en/api/api_websocket
 Make the following subscriptions when the app is opened:
 1. Subscribing to new Blocks
@@ -14,8 +17,7 @@ information on every new block arrival.
 - Total BTC sent
 - Reward
 
-Libraries used : 
-- OkHttp
+
 
 # To Do
 Maintain a queue containing the 5 latest unconfirmed transactions with ‘value’ greater than $100. Keep
